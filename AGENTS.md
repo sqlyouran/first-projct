@@ -13,13 +13,70 @@ You are an AI engineering agent working on the first-projct project. You operate
 
 ## Workflow
 
+### Feature Development Lifecycle (Mandatory)
+
+Every feature/requirement MUST follow this 7-step lifecycle. No step can be skipped.
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│  1. EXPLORE → 2. PROPOSE → 3. DESIGN → 4. TASKS               │
+│       ↓           ↓            ↓           ↓                    │
+│  Clarify      proposal.md  design.md   tasks.md                │
+│  requirements  (approve)    (approve)   (breakdown)            │
+│                                                                 │
+│  5. IMPLEMENT → 6. REVIEW → 7. ARCHIVE                        │
+│       ↓             ↓           ↓                              │
+│  feature-dev    code-review  changes/ → archive/               │
+│  + TDD skill    skill                                          │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+#### Step 1: Explore (需求探索)
+- Clarify requirements with the user
+- Ask questions to define scope, constraints, and success criteria
+- Identify target users and key scenarios
+
+#### Step 2: Propose (提案)
+- Create directory: `openspec/changes/{feature-name}/`
+- Write `proposal.md` using template from `openspec/templates/proposal.md`
+- Content: problem statement, proposed solution, scope (in/out), success criteria
+- **Gate**: Must get user approval before proceeding
+
+#### Step 3: Design (技术方案)
+- Write `design.md` using template from `openspec/templates/design.md`
+- Content: architecture, data model, API design, frontend pages, dependencies
+- **Gate**: Must get user approval before proceeding
+
+#### Step 4: Tasks (任务拆解)
+- Write `tasks.md` using template from `openspec/templates/tasks.md`
+- Break into atomic, testable tasks grouped by phase
+- Each task should be independently completable and verifiable
+
+#### Step 5: Implement (实施)
+- Follow `skills/feature-dev/SKILL.md` process
+- For each task:
+  - Write failing test first (`skills/tdd/SKILL.md`)
+  - Implement minimum code to pass
+  - Refactor if needed
+- Run tests after each task: `cd backend && ./gradlew test`
+- Run build after frontend changes: `cd frontend && npm run build`
+
+#### Step 6: Review (代码审查)
+- Invoke `skills/code-review/SKILL.md` process
+- Review dimensions: Correctness, Security, Performance, Maintainability, Test Coverage
+- Severity levels: 🔴 Critical → 🟡 Warning → 🟢 Suggestion
+- **Gate**: All 🔴 Critical and 🟡 Warning issues must be fixed
+- Re-run tests after fixes to confirm no regression
+
+#### Step 7: Archive (归档)
+- Move spec from `openspec/changes/{feature-name}/` to `openspec/archive/{feature-name}/`
+- Commit with message: `chore: archive {feature-name} spec (feature complete)`
+- Feature lifecycle is now complete
+
 ### Starting a New Feature
-1. Create a change directory: `openspec/changes/{feature-name}/`
-2. Write `proposal.md` using template from `openspec/templates/`
-3. Get proposal approved (review with user)
-4. Write `design.md` with technical approach
-5. Create `tasks.md` with atomic, testable tasks
-6. Implement using the `feature-dev` skill
+1. Begin at Step 1 (Explore)
+2. Walk through all 7 steps sequentially
+3. Never jump ahead — each step's gate must be passed
 
 ### Fixing a Bug
 1. Invoke the `debugging` skill
