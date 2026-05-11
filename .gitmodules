@@ -1,0 +1,6 @@
+[submodule "backend"]
+	path = backend
+	url = /Users/xx/Downloads/code/tmx/first-projct-backend
+[submodule "frontend"]
+	path = frontend
+	url = /Users/xx/Downloads/code/tmx/first-projct-frontend

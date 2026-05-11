@@ -36,29 +36,37 @@ You are an AI engineering agent working on the first-projct project. You operate
 
 ## Tech Stack
 
-### Backend
+### Backend (git submodule: `backend/`)
+- **Repo**: first-projct-backend
 - **Framework**: Spring Boot 3.4
 - **Language**: Java 21
 - **Build Tool**: Gradle (Kotlin DSL)
 - **Database**: H2 (dev), configurable for production
-- **Location**: `src/backend/`
-- **Run**: `cd src/backend && ./gradlew bootRun`
-- **Test**: `cd src/backend && ./gradlew test`
+- **Run**: `cd backend && ./gradlew bootRun`
+- **Test**: `cd backend && ./gradlew test`
 - **Port**: 8080
 
-### Frontend
+### Frontend (git submodule: `frontend/`)
+- **Repo**: first-projct-frontend
 - **Framework**: React 19 + TypeScript
 - **Build Tool**: Vite 6
-- **Location**: `src/frontend/`
-- **Run**: `cd src/frontend && npm run dev`
-- **Build**: `cd src/frontend && npm run build`
-- **Lint**: `cd src/frontend && npm run lint`
+- **Run**: `cd frontend && npm run dev`
+- **Build**: `cd frontend && npm run build`
+- **Lint**: `cd frontend && npm run lint`
 - **Port**: 5173 (dev proxy → backend:8080)
+
+## Repository Structure
+This project uses **git submodules** to manage frontend and backend as independent repositories.
+
+### Submodule Commands
+- Init after clone: `git submodule update --init --recursive`
+- Pull latest: `git submodule update --remote --merge`
 
 ## Directory Structure
 ```
-first-projct/
+first-projct/ (main repo)
 ├── AGENTS.md              ← You are here (Harness orchestration)
+├── .gitmodules            ← Submodule declarations
 ├── package.json           ← Root scripts (dev/build/test shortcuts)
 ├── openspec/              ← Spec-driven development layer
 │   ├── config.yaml        ← OpenSpec configuration
@@ -71,15 +79,14 @@ first-projct/
 │   ├── code-review/SKILL.md ← Code review process
 │   ├── debugging/SKILL.md ← Debugging methodology
 │   └── feature-dev/SKILL.md ← Feature development flow
-├── src/
-│   ├── backend/           ← Spring Boot application
-│   │   ├── build.gradle.kts
-│   │   ├── src/main/java/com/firstprojct/
-│   │   └── src/test/java/com/firstprojct/
-│   └── frontend/          ← React + Vite application
-│       ├── package.json
-│       ├── vite.config.ts
-│       └── src/
+├── backend/               ← [submodule] first-projct-backend
+│   ├── build.gradle.kts
+│   ├── src/main/java/com/firstprojct/
+│   └── src/test/java/com/firstprojct/
+├── frontend/              ← [submodule] first-projct-frontend
+│   ├── package.json
+│   ├── vite.config.ts
+│   └── src/
 ├── tests/                 ← Integration / E2E tests
 └── docs/                  ← Documentation
 ```
