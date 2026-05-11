@@ -1,0 +1,14 @@
+{
+  "name": "first-projct",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Full-stack project with OpenSpec + Superpowers + Harness workflow",
+  "scripts": {
+    "dev:frontend": "cd src/frontend && npm run dev",
+    "dev:backend": "cd src/backend && ./gradlew bootRun",
+    "build:frontend": "cd src/frontend && npm run build",
+    "build:backend": "cd src/backend && ./gradlew build",
+    "test:backend": "cd src/backend && ./gradlew test",
+    "lint:frontend": "cd src/frontend && npm run lint"
+  }
+}

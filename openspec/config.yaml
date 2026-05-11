@@ -1,0 +1,28 @@
+project:
+  name: first-projct
+  version: "0.1.0"
+  description: "Full-stack project powered by OpenSpec + Superpowers + Harness workflow"
+
+workflow:
+  # OpenSpec classic flow: explore → propose → apply → archive
+  stages:
+    - explore
+    - propose
+    - apply
+    - archive
+
+specs:
+  dir: openspec/specs
+  format: markdown
+
+changes:
+  dir: openspec/changes
+  structure:
+    - proposal.md
+    - design.md
+    - specs/
+    - tasks.md
+
+archive:
+  dir: openspec/archive
+  auto_archive: true
