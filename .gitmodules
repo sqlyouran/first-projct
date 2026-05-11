@@ -1,6 +1,6 @@
 [submodule "backend"]
 	path = backend
-	url = /Users/xx/Downloads/code/tmx/first-projct-backend
+	url = git@github.com:sqlyouran/first-projct-backend.git
 [submodule "frontend"]
 	path = frontend
-	url = /Users/xx/Downloads/code/tmx/first-projct-frontend
+	url = git@github.com:sqlyouran/first-projct-frontend.git
