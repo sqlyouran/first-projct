@@ -5,10 +5,10 @@
   "description": "Full-stack project with OpenSpec + Superpowers + Harness workflow",
   "scripts": {
     "dev:frontend": "cd frontend && npm run dev",
-    "dev:backend": "cd backend && ./gradlew bootRun",
+    "dev:backend": "cd backend && ./mvnw spring-boot:run",
     "build:frontend": "cd frontend && npm run build",
-    "build:backend": "cd backend && ./gradlew build",
-    "test:backend": "cd backend && ./gradlew test",
+    "build:backend": "cd backend && ./mvnw package",
+    "test:backend": "cd backend && ./mvnw test",
     "lint:frontend": "cd frontend && npm run lint",
     "submodule:init": "git submodule update --init --recursive",
     "submodule:update": "git submodule update --remote --merge"
