@@ -1,53 +1,5 @@
 ## ADDED Requirements
 
-### Requirement: 创建帖子
-系统 SHALL 允许用户创建帖子，帖子包含标题（必填）和正文内容（必填，纯文本）。创建时可选关联多个医院和/或多个专科，也可以不关联任何实体。
-
-#### Scenario: 创建不关联任何实体的帖子
-- **WHEN** 用户提交帖子，包含标题和内容，不选择任何医院或专科
-- **THEN** 系统创建帖子成功，返回帖子详情，帖子不关联任何医院或专科
-
-#### Scenario: 创建关联多个医院和专科的帖子
-- **WHEN** 用户提交帖子，包含标题、内容，并选择 2 个医院和 1 个专科
-- **THEN** 系统创建帖子成功，帖子与所选医院和专科建立关联
-
-#### Scenario: 标题或内容为空时拒绝创建
-- **WHEN** 用户提交帖子，标题或内容为空
-- **THEN** 系统返回验证错误，帖子不被创建
-
-### Requirement: 浏览帖子列表
-系统 SHALL 提供帖子列表接口，支持分页查询，默认按创建时间倒序排列。
-
-#### Scenario: 按最新排序获取帖子列表
-- **WHEN** 用户请求帖子列表，排序方式为"最新"
-- **THEN** 系统返回按创建时间倒序排列的帖子分页列表，每条帖子包含标题、内容摘要、作者信息、点赞数、评论数、创建时间
-
-#### Scenario: 按最热排序获取帖子列表
-- **WHEN** 用户请求帖子列表，排序方式为"最热"
-- **THEN** 系统返回按 (like_count + comment_count) 倒序排列的帖子分页列表
-
-### Requirement: 查看帖子详情
-系统 SHALL 提供帖子详情接口，返回完整的帖子信息及其关联的医院和专科。
-
-#### Scenario: 查看存在的帖子详情
-- **WHEN** 用户请求一个存在的帖子 ID
-- **THEN** 系统返回帖子完整内容、作者信息、关联的医院列表、关联的专科列表、点赞数、收藏数、评论数、创建时间
-
-#### Scenario: 查看不存在的帖子
-- **WHEN** 用户请求一个不存在的帖子 ID
-- **THEN** 系统返回 404 错误
-
-### Requirement: 按医院或专科查询关联帖子
-系统 SHALL 提供按医院 ID 或专科 ID 查询关联帖子的接口，用于在医院详情页和专科排名页展示相关帖子。
-
-#### Scenario: 按医院查询关联帖子
-- **WHEN** 用户请求某医院 ID 的关联帖子
-- **THEN** 系统返回所有关联该医院的帖子列表，按创建时间倒序
-
-#### Scenario: 按专科查询关联帖子
-- **WHEN** 用户请求某专科 ID 的关联帖子
-- **THEN** 系统返回所有关联该专科的帖子列表，按创建时间倒序
-
 ### Requirement: Post type classification
 The system SHALL support two post types: DISCUSSION (default, backward-compatible) and STORY (structured patient journey).
 

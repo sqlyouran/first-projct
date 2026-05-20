@@ -101,8 +101,36 @@ Every feature follows this lifecycle. OpenSpec slash commands map to each step:
 Skills auto-trigger during each phase:
 - **explore**: `brainstorming` skill activates
 - **propose**: `writing-plans` skill structures the tasks
-- **apply**: `test-driven-development` + `executing-plans` skills enforce quality
+- **apply**: Superpowers 全流程接管（见下方详细规则）
 - **before complete**: `verification-before-completion` + `requesting-code-review`
+
+### Apply 阶段 Superpowers 执行规则（强制）
+
+> 当进入 `/opsx:apply` 时，**不直接写代码**，必须走 Superpowers 方法论的严格循环。
+> OpenSpec 管"做什么"（proposal/specs/design/tasks），Superpowers 管"怎么做"（TDD/审查/子Agent调度）。
+
+**执行流程（按顺序）：**
+
+```
+/opsx:apply
+    │
+    ├─ 1. brainstorming        → 基于 design.md 做进一步设计细化
+    ├─ 2. writing-plans        → 将 tasks 拆成每个 2-5 分钟的精细工程任务
+    ├─ 3. subagent-driven-dev  → 为每个任务分发子 Agent（可并行）
+    ├─ 4. test-driven-dev      → RED-GREEN-REFACTOR（先写失败测试再写实现）
+    ├─ 5. code-review          → 两阶段审查：规格合规性 + 代码质量
+    └─ 6. verification         → 验证完成后才可标记任务 done
+                                    │
+                                review 通过
+                                    │
+                             /opsx:archive
+```
+
+**最佳实践：**
+1. **spec.md 是唯一真实来源** — brainstorming 和 plan 都以 delta spec 为基准，不依赖聊天上下文
+2. **先 review 后 archive** — 不要代码写完就立刻 `/opsx:archive`，让 Superpowers 完成 code review 和 verification-before-completion 后再归档
+3. **TDD 与 delta specs 对齐** — 写测试时直接参照 delta spec 里的 WHEN/THEN 场景
+4. **保持 spec 持续更新** — 实现中发现设计需调整时，先更新 spec 再改代码，不让代码和 spec 产生漂移
 
 ### Fixing a Bug
 1. Invoke the `systematic-debugging` skill
