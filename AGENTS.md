@@ -140,6 +140,116 @@ Skills auto-trigger during each phase:
 5. Apply fix
 6. Invoke `requesting-code-review` skill
 
+## Multi-Agent Team
+
+This project uses a 4-role AI collaboration model. All agents are defined in `.qoder/agents/` and invoked via slash commands in `.qoder/commands/`.
+
+### Agent Roles
+
+| Agent | File | Responsibility |
+|-------|------|----------------|
+| **PM** | `.qoder/agents/product-manager.md` | Drafts OpenSpec changes (proposal/specs/tasks) using module brain-dumps as context |
+| **Engineer (Backend)** | `.qoder/agents/engineer-backend.md` | Implements backend tasks: Java 21, Spring Boot, Maven |
+| **Engineer (Frontend)** | `.qoder/agents/engineer-frontend.md` | Implements frontend tasks: React 19, TypeScript, Vite |
+| **QA** | `.qoder/agents/qa.md` | Product acceptance from user perspective; produces markdown reports |
+
+### Collaboration Model: File Contracts
+
+Agents do NOT communicate directly. All handoffs happen through shared files:
+
+```
+PM writes ──► openspec/changes/<name>/proposal.md
+              openspec/changes/<name>/design.md
+              openspec/changes/<name>/specs/
+              openspec/changes/<name>/tasks.md
+                │
+Engineer reads ◄┘
+Engineer writes ──► code changes
+Engineer updates ──► tasks.md (marks [x])
+                │
+QA reads ◄┘
+QA writes ──► docs/qa-reports/<date>-<change>.md
+```
+
+### Orchestrator (Main Conversation)
+
+The main conversation acts as the sole orchestrator:
+- Routes user requests to the appropriate agent
+- Handles Platform-layer changes directly (no PM dispatch)
+- Performs cross-module arbitration (see below)
+- Makes dispatch decisions for `/opsx:apply` (see Smart Dispatch)
+- Aggregates results from parallel agent execution
+
+### Smart Dispatch Matrix (`/opsx:apply`)
+
+| Condition | Mode | Action |
+|-----------|------|--------|
+| Platform-layer change | Direct | Main conversation implements directly |
+| < 5 tasks | Direct | Main conversation implements directly |
+| ≥ 5 tasks, single-stack | Single-Engineer | Dispatch `engineer-backend` or `engineer-frontend` |
+| ≥ 5 tasks, cross-stack | Parallel | Partition by stack, dispatch both Engineers |
+
+*Note: If the `multi-agent-team-foundation` smoke test recorded FAIL, parallel dispatch is disabled and falls back to single-Engineer or direct mode.*
+
+---
+
+## PM Tier Protocol
+
+The PM agent operates in one of three tiers. The default is **Tier B**.
+
+### Tier A: Autonomous (NOT USED)
+The PM auto-executes the full OpenSpec workflow including `openspec new change`, file creation, and task execution. This tier requires high trust and is currently disabled.
+
+### Tier B: Consultant (DEFAULT)
+The PM produces a **complete draft** (proposal + specs + tasks) with all decision points explicitly flagged. The user reviews and approves before any files are created. This is the recommended mode for all changes.
+
+**Characteristics**:
+- Full draft with citations to module brain-dump
+- Explicit "Decision Point" annotations where multiple valid options exist
+- User retains veto/approval power on every artifact
+
+### Tier C: Assistant
+The PM acts as a thinking partner for open-ended questions. Does not produce complete drafts; instead helps the user think through trade-offs, refine requirements, or explore edge cases.
+
+**Characteristics**:
+- Conversational, not artifact-producing
+- Useful for early-stage exploration before a formal proposal
+- Outputs discussion notes, not structured OpenSpec files
+
+---
+
+## Cross-Module Arbitration
+
+When a single requirement could plausibly belong to multiple product modules, apply these rules in order:
+
+1. **Entry-Point Ownership**: Which module's user interface is the primary entry point for this feature? The feature belongs to that module.
+
+2. **Data Ownership**: If entry points are ambiguous, which module owns the primary data entity? The feature belongs to the module that owns the core data.
+
+3. **Explicit Human Arbitration**: If still ambiguous after rules 1 and 2, the orchestrator (main conversation) must make an explicit decision and document it in the proposal's Background section.
+
+**Examples**:
+- "Add hospital bookmarking" → Medical Directory (entry point is hospital detail page)
+- "Show community posts on hospital page" → Medical Directory (entry point) but Patient Community provides data
+- "Send email when inquiry is answered" → Hospital Inquiry (owns the data and the user journey)
+
+---
+
+## Module Brain-Dumps
+
+Product module context lives in `docs/modules/`:
+
+- `docs/modules/_template.md` — Uniform template (8 sections) for all modules
+- `docs/modules/medical-directory.md` — Hospital directory, search, rankings
+- `docs/modules/patient-community.md` — Posts, stories, comments, interactions
+- `docs/modules/hospital-inquiry.md` — Inquiry forms, status tracking
+
+**For PM agents**: These brain-dumps are MANDATORY pre-reads before drafting any change. They contain user personas, red lines, priority principles, known gaps, and decision logs.
+
+**For QA agents**: These brain-dumps provide the user-perspective context needed for acceptance reports. QA findings must cite specific brain-dump sections.
+
+**Maintenance**: Brain-dumps are updated as part of any OpenSpec change that adds, modifies, or removes module capabilities.
+
 ## Tech Stack
 
 ### Backend (git submodule: `backend/`)

@@ -11,6 +11,27 @@ Implement tasks from an OpenSpec change.
 
 **Steps**
 
+0. **Dispatch decision (NEW)**
+
+   Before implementing, determine the execution mode:
+   
+   a. **Classify the change**: Is this Platform-layer (`.qoder/`, `openspec/`, `docs/`, root configs) or Product-layer (affects `backend/` or `frontend/` business code)?
+   
+   b. **Count tasks**: Read `tasks.md` and count total pending tasks.
+   
+   c. **Detect cross-stack**: Do pending tasks touch both `backend/` and `frontend/`?
+   
+   d. **Choose mode**:
+   
+   | Condition | Mode | Action |
+   |-----------|------|--------|
+   | Platform-layer change | Direct | Main conversation implements directly |
+   | < 5 tasks | Direct | Main conversation implements directly |
+   | ≥ 5 tasks, single-stack | Single-Engineer | Dispatch `engineer-backend` or `engineer-frontend` |
+   | ≥ 5 tasks, cross-stack | Parallel | Partition by stack, dispatch both Engineers in parallel |
+   
+   e. **Respect smoke test gate**: If the `multi-agent-team-foundation` smoke test recorded FAIL, do NOT attempt parallel dispatch. Fall back to single-Engineer or direct mode.
+
 1. **Select the change**
 
    If a name is provided, use it. Otherwise:
